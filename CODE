@@ -1,0 +1,56 @@
+import pandas as pd
+import yfinance as yf
+import matplotlib.pyplot as plt
+import seaborn as s
+#Download the stock data
+
+data = yf.download('AAPL', start='2010-01-01', end='2022-02-26')
+
+# Convert the data to a Pandas DataFrame
+df = pd.DataFrame(data)
+
+# Set the date as the index
+df.index = pd.to_datetime(df.index)
+
+# EDA Process
+print("Summary Statistics:")
+print(df.describe())
+
+print("\nData Types:")
+print(df.dtypes)
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+# Plot the stock price over time
+plt.figure(figsize=(12, 6))
+plt.plot(df['Close'])
+plt.title('AAPL Stock Price Over Time')
+plt.xlabel('Date')
+plt.ylabel('Stock Price ($)')
+plt.show()
+
+# Plot the daily returns
+df['Return'] = df['Close'].pct_change()
+plt.figure(figsize=(12, 6))
+plt.plot(df['Return'])
+plt.title('AAPL Daily Returns')
+plt.xlabel('Date')
+plt.ylabel('Return (%)')
+plt.show()
+
+# Plot the histogram of daily returns
+plt.figure(figsize=(8, 6))
+sns.histplot(df['Return'], bins=50)
+plt.title('Histogram of AAPL Daily Returns')
+plt.xlabel('Return (%)')
+plt.ylabel('Frequency')
+plt.show()
+
+# Plot the correlation matrix
+corr_matrix = df.corr()
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', square=True)
+plt.title('AAPL Stock Correlation Matrix')
+plt.show()
+
+
